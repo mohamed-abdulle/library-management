@@ -1,4 +1,3 @@
-import Overview from "src/pages/Overview.tsx/Overview";
 import Books from "src/pages/books/Books";
 import Customers from "src/pages/customers/Customers";
 import Staff from "src/pages/staff/Staff";

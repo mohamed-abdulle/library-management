@@ -3,7 +3,7 @@ name: Deploy React Vite App to GitHub Pages
 on:
   push:
     branches:
-      - main
+      - master
   workflow_dispatch:
 
 permissions:
@@ -34,10 +34,6 @@ jobs:
 
       - name: Build application
         run: npm run build
-
-      # Support React Router browser routes on GitHub Pages
-      - name: Configure SPA fallback
-        run: cp dist/index.html dist/404.html
 
       - name: Upload build artifact
         uses: actions/upload-pages-artifact@v3

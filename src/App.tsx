@@ -3,7 +3,7 @@ import { AppContext } from "./services/AppContext";
 
 import { ToastContainer } from "react-toastify";
 import "src/styles/index.sass";
-
+import "src/styles/tailwind.css";
 import Layout from "./layout/Layout";
 
 function App() {

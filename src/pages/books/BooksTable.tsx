@@ -1,4 +1,5 @@
 import DataTable, { type TableColumn } from "react-data-table-component";
+import DefaultBookCover from "src/assets/images/default-book-cover.png";
 import BookForm from "./BookForm";
 import { useState } from "react";
 import { RiDeleteBin2Line } from "react-icons/ri";
@@ -53,7 +54,7 @@ export default function BooksTable({
         <div className="book-title">
           <img
             className="book-cover"
-            src={/* row.coverImageUrl || */ "/images/default-book-cover.png"}
+            src={row.coverImageUrl || DefaultBookCover}
           />
           {row.title}
         </div>
@@ -116,45 +117,42 @@ export default function BooksTable({
   ];
 
   return (
-      
-        <div className="my-table">
-          <DataTable
-            data={books}
-            columns={columns}
-            pagination
-            paginationPerPage={paginationPerPage}
-            paginationRowsPerPageOptions={DEFAULT_PAGINATION_OPTIONS}
-            paginationTotalRows={paginationTotalRows}
-            onChangePage={onChangePage}
-            onChangeRowsPerPage={onChangeRowsPerPage}
-            paginationServer
-            paginationResetDefaultPage={resetDefaultPage}
-            progressPending={loading}
-            progressComponent={<Loading />}
-          />
+    <div className="my-table">
+      <DataTable
+        data={books}
+        columns={columns}
+        pagination
+        paginationPerPage={paginationPerPage}
+        paginationRowsPerPageOptions={DEFAULT_PAGINATION_OPTIONS}
+        paginationTotalRows={paginationTotalRows}
+        onChangePage={onChangePage}
+        onChangeRowsPerPage={onChangeRowsPerPage}
+        paginationServer
+        paginationResetDefaultPage={resetDefaultPage}
+        progressPending={loading}
+        progressComponent={<Loading />}
+      />
 
-          {openDelete && recordToBeDeleted && (
-            <ConfirmationModal
-              onClose={() => {
-                setOpenDelete(false);
-                setRecordToBeDeleted(null);
-              }}
-              onConfirm={() => onDeleteBook(recordToBeDeleted)}
-            />
-          )}
-          {openEditModal && selectedBook && (
-            <BookForm
-              onClose={() => {
-                setOpenEditModal(false);
-                setSelectedBook(null);
-              }}
-              selectedBook={selectedBook}
-              isEditing
-              callBack={() => getBooks()}
-            />
-          )}
-        </div>
-  
-   
+      {openDelete && recordToBeDeleted && (
+        <ConfirmationModal
+          onClose={() => {
+            setOpenDelete(false);
+            setRecordToBeDeleted(null);
+          }}
+          onConfirm={() => onDeleteBook(recordToBeDeleted)}
+        />
+      )}
+      {openEditModal && selectedBook && (
+        <BookForm
+          onClose={() => {
+            setOpenEditModal(false);
+            setSelectedBook(null);
+          }}
+          selectedBook={selectedBook}
+          isEditing
+          callBack={() => getBooks()}
+        />
+      )}
+    </div>
   );
 }

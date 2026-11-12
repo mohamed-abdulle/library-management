@@ -11,4 +11,5 @@ export default defineConfig({
       //'@': path.resolve(__dirname, 'src'), // alias for cleaner imports
     },
   },
+  base: "/library-management/",
 });

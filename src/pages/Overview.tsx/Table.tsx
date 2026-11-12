@@ -1,5 +1,4 @@
 import DataTable from "react-data-table-component";
-import { booksData } from "../../apis/data/booksData";
 export default function OverviewTable() {
   const columns = [
     {
@@ -29,7 +28,7 @@ export default function OverviewTable() {
   return (
     <div>
       <DataTable
-        data={booksData}
+        data={[]}
         columns={columns}
         pagination
         paginationPerPage={10}

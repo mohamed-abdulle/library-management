@@ -1,5 +1,6 @@
 import DataTable, { type TableColumn } from "react-data-table-component";
 import type { Book } from "src/types/bookTypes";
+import DefaultBookCover from "src/assets/images/default-book-cover.png";
 
 export default function DashBookTable({ books }: { books: Book[] }) {
   const columns: TableColumn<Book>[] = [
@@ -10,7 +11,7 @@ export default function DashBookTable({ books }: { books: Book[] }) {
         <div className="book-title font-normal">
           <img
             className="book-cover"
-            src={row.coverImageUrl || "/images/default-book-cover.png"}
+            src={row.coverImageUrl || DefaultBookCover}
           />
           <div className="font-normal">{row.title}</div>
         </div>

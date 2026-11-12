@@ -1,69 +1,66 @@
-// src/components/table-action-menu/TableActionMenu.tsx
+import type { ReactNode } from "react";
 
-import { useEffect, useRef, useState, type ReactNode } from "react";
-import { IoEllipsisVerticalSharp } from "react-icons/io5";
+import { FiEdit } from "react-icons/fi";
+import { RiDeleteBin2Line } from "react-icons/ri";
+import { BiLinkExternal } from "react-icons/bi";
+import { Code } from "lucide-react";
 
-import "./TableActionMenu.sass";
+import type { ActionType, TableMenuItem } from "src/types/MenuItem";
 
-type MenuItem =
-  | {
-      label: string;
-      icon?: ReactNode;
-      onClick: () => void;
-    }
-  | false;
+import MyDropdownMenu from "../dropdown-menu/DropdownMenu";
 
 type Props = {
-  items: MenuItem[];
+  items: TableMenuItem[];
+  placement?: "bottom-start" | "bottom-end" | "left" | "right";
+  mainIcon?: ReactNode;
 };
 
-export default function TableActionMenu({ items }: Props) {
-  const [open, setOpen] = useState(false);
-  const menuRef = useRef<HTMLDivElement>(null);
+export default function TableActionMenu({
+  items,
+  placement = "bottom-end",
+  mainIcon,
+}: Props) {
+  const defaultActionIcons: Record<ActionType, ReactNode> = {
+    view: <BiLinkExternal />,
+    edit: <FiEdit />,
+    delete: <RiDeleteBin2Line />,
+  };
 
-  useEffect(() => {
-    const handleClickOutside = (event: MouseEvent) => {
-      if (menuRef.current && !menuRef.current.contains(event.target as Node)) {
-        setOpen(false);
-      }
-    };
+  const getActionIcon = (item: TableMenuItem) => {
+    if (item.icon) return item.icon;
+    if (item.type) return defaultActionIcons[item.type];
+    return <Code />;
+  };
 
-    document.addEventListener("mousedown", handleClickOutside);
+  const visibleItems = items.filter((item) => !item.hide);
 
-    return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
-    };
-  }, []);
+  const standAloneItems = visibleItems.filter((item) => item.standAlone);
 
-  const filteredItems = items.filter((item) => item !== false);
+  const menuItems = visibleItems.filter((item) => !item.standAlone);
 
   return (
-    <div ref={menuRef} className="table-action-menu">
-      <IoEllipsisVerticalSharp
-        className="link-like"
-        onClick={() => setOpen((prev) => !prev)}
+    <div className="flex gap-3 items-center content-between">
+      {standAloneItems.map((item) => (
+        <button
+          key={item.label}
+          type="button"
+          className=""
+          title={item.label}
+          onClick={item.onClick}
+        >
+          {getActionIcon(item)}
+        </button>
+      ))}
+
+      <MyDropdownMenu
+        items={menuItems.map((item) => ({
+          label: item.label,
+          icon: getActionIcon(item),
+          onClick: item.onClick,
+        }))}
+        mainIcon={mainIcon}
+        placement={placement}
       />
-
-      {open && (
-        <div className="table-action-menu__dropdown">
-          {filteredItems.map((item, index) => (
-            <button
-              key={index}
-              className="table-action-menu__item link-like"
-              onClick={() => {
-                item.onClick();
-                setOpen(false);
-              }}
-            >
-              {item.icon && (
-                <span className="table-action-menu__icon">{item.icon}</span>
-              )}
-
-              <span className="table-action-menu__label">{item.label}</span>
-            </button>
-          ))}
-        </div>
-      )}
     </div>
   );
 }

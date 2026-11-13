@@ -6,39 +6,38 @@ import {
   Users,
   UserCog,
 } from "lucide-react";
+export const sidebarNavigationData = [
+  {
+    label: "Dashboard",
+    path: "/dashboard",
+    icon: LayoutDashboard,
+  },
+  {
+    label: "Rentals",
+    path: "/rentals",
+    icon: BookOpenCheck,
+  },
+  {
+    label: "Books",
+    path: "/books",
+    icon: BookOpen,
+  },
+  {
+    label: "Customers",
+    path: "/customers",
+    icon: Users,
+  },
+  {
+    label: "Staff",
+    path: "/staff",
+    icon: UserCog,
+  },
+];
 
 export default function SidebarNavigation() {
-  const data = [
-    {
-      label: "Dashboard",
-      path: "/dashboard",
-      icon: LayoutDashboard,
-    },
-    {
-      label: "Rentals",
-      path: "/rentals",
-      icon: BookOpenCheck,
-    },
-    {
-      label: "Books",
-      path: "/books",
-      icon: BookOpen,
-    },
-    {
-      label: "Customers",
-      path: "/customers",
-      icon: Users,
-    },
-    {
-      label: "Staff",
-      path: "/staff",
-      icon: UserCog,
-    },
-  ];
-
   return (
     <nav className="sidebar-navs-wrapper">
-      {data.map((nav) => {
+      {sidebarNavigationData.map((nav) => {
         const Icon = nav.icon;
 
         return (

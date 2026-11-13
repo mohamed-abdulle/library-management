@@ -103,11 +103,16 @@
 
 // Automatic responsive collapse
 
-@media (max-width: 900px)
+@media (max-width: 1279px)
   .sidebar
     @include collapsed-sidebar
 
     // hide toggle when auto-collapsed
     .sidebar-toggle
       display: none
+
+      
+@media (max-width: 799px)
+  .sidebar
+    display: none
 

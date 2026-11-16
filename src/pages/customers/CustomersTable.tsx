@@ -55,32 +55,26 @@ export default function CustomersTable({
   );
 
   const onSuspendCustomer = (customer: Customer) => {
-    apiWithToast(updateCustomerStatusAPI(customer.id, "suspended"))
-      .then(() => {
-        getCustomers();
-        setSelectedCustomer(null);
-        setOpenSuspend(false);
-      })
-      
+    apiWithToast(updateCustomerStatusAPI(customer.id, "suspended")).then(() => {
+      getCustomers();
+      setSelectedCustomer(null);
+      setOpenSuspend(false);
+    });
   };
 
   const onActivateCustomer = (customer: Customer) => {
-    apiWithToast(updateCustomerStatusAPI(customer.id, "active"))
-      .then(() => {
-        getCustomers();
-        setSelectedCustomer(null);
-        setOpenActivate(false);
-      })
-      
+    apiWithToast(updateCustomerStatusAPI(customer.id, "active")).then(() => {
+      getCustomers();
+      setSelectedCustomer(null);
+      setOpenActivate(false);
+    });
   };
   const onDeleteCustomer = (customer: Customer) => {
-    apiWithToast(deleteCustomerAPI(customer.id))
-      .then(() => {
-        getCustomers();
-        setRecordToBeDeleted(null);
-        setOpenDelete(false);
-      })
-      
+    apiWithToast(deleteCustomerAPI(customer.id)).then(() => {
+      getCustomers();
+      setRecordToBeDeleted(null);
+      setOpenDelete(false);
+    });
   };
   const setupStatus = (row: Customer) => {
     const status = row.status;
@@ -167,17 +161,19 @@ export default function CustomersTable({
                     setOpenDelete(true);
                   },
                 },
-                row.status === "active" && {
+                {
                   label: "Suspend",
+                  hide: row.status !== "active",
                   icon: <UserRoundX />,
                   onClick: () => {
                     setSelectedCustomer(row);
                     setOpenSuspend(true);
                   },
                 },
-                row.status === "suspended" && {
+                {
                   label: "Activate",
                   icon: <UserRoundCheck />,
+                  hide: row.status !== "suspended",
                   onClick: () => {
                     setSelectedCustomer(row);
                     setOpenActivate(true);

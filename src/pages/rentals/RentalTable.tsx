@@ -81,7 +81,7 @@ export default function RentalTable({
   const [selectedRecord, setSelectedRecord] = useState<RentalView | null>(null);
   const [openDelete, setOpenDelete] = useState(false);
   const [openUndoReturn, setOpeningUndoReturnModal] = useState(false);
-  
+
   const [openingReturnModal, setOpeningReturnModal] = useState(false);
 
   const onDeleting = (record: RentalView) => {
@@ -94,7 +94,7 @@ export default function RentalTable({
   const onUndoReturn = (record: RentalView) => {
     apiWithToast(undoReturnRentalAPI(record.id)).then(() => {
       getRentals();
-      
+
       setOpeningUndoReturnModal(false);
     });
   };
@@ -215,17 +215,19 @@ export default function RentalTable({
 
             <TableActionMenu
               items={[
-                status !== "returned" && {
+                {
                   label: "Return Book",
                   icon: <MdUndo />,
+                  hide: status === "returned",
                   onClick: () => {
                     setOpeningReturnModal(true);
                     setSelectedRecord(record);
                   },
                 },
-                status === "returned" && {
+                {
                   label: "Undo Return",
                   icon: <CgUndo />,
+                  hide: status !== "returned",
                   onClick: () => {
                     setOpeningUndoReturnModal(true);
                     setSelectedRecord(record);
@@ -289,7 +291,6 @@ export default function RentalTable({
         <ConfirmationModal
           onClose={() => {
             setOpenDelete(false);
-            
           }}
           onConfirm={() => onDeleting(selectedRecord)}
         />
@@ -299,7 +300,6 @@ export default function RentalTable({
         <ConfirmationModal
           onClose={() => {
             setOpeningUndoReturnModal(false);
-            
           }}
           onConfirm={() => onUndoReturn(selectedRecord)}
         />
@@ -317,7 +317,6 @@ export default function RentalTable({
             getRentals={getRentals}
             onClose={() => {
               setOpenViewRental(false);
-              
             }}
           />
         </MyModal>
@@ -345,13 +344,11 @@ export default function RentalTable({
         <MyModal
           onClose={() => {
             setOpeningReturnModal(false);
-            
           }}
         >
           <ReturnRental
             onClose={() => {
               setOpeningReturnModal(false);
-              
             }}
             rentalId={selectedRecord.id}
             getRentals={getRentals}

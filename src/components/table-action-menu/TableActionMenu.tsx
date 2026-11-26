@@ -7,7 +7,7 @@ import { Code } from "lucide-react";
 
 import type { ActionType, TableMenuItem } from "src/types/MenuItem";
 
-import MyDropdownMenu from "../dropdown-menu/DropdownMenu";
+import MyDropdownMenu from "../my-dropdown-menu/MyDropdownMenu";
 
 type Props = {
   items: TableMenuItem[];
@@ -39,7 +39,7 @@ export default function TableActionMenu({
   const menuItems = visibleItems.filter((item) => !item.standAlone);
 
   return (
-    <div className="flex gap-3 items-center content-between">
+    <div className="flex gap-2 items-center content-between">
       {standAloneItems.map((item) => (
         <button
           key={item.label}

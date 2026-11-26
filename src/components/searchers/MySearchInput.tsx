@@ -1,7 +1,7 @@
 import { useEffect, useState, type JSX } from "react";
 import "../my-input/my-input.sass";
 import { BiSearch } from "react-icons/bi";
-import useDebounce from "src/utils/useDebounce";
+import useDebounce from "src/utils/custom-hooks/useDebounce";
 
 type props = {
   label?: string | undefined;

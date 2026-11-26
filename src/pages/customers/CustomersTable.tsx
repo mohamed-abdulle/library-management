@@ -22,6 +22,9 @@ import StatusBadge from "src/components/status-badge/StatusBadge";
 import EditCustomerModal from "./customer-modals/EditCustomerModal";
 import { UserRoundCheck, UserRoundX } from "lucide-react";
 import Loading from "src/components/loading/Loading";
+import useMediaQuery from "src/utils/custom-hooks/useMediaQuery";
+import { nameJoiner } from "src/utils/stringUtils";
+import CustomerCard from "./customer-card/CustomerCard";
 
 export default function CustomersTable({
   customers,
@@ -54,6 +57,9 @@ export default function CustomersTable({
     null,
   );
 
+  const isFirstResize = useMediaQuery("(max-width: 1000px)");
+  const isSecondResize = useMediaQuery("(max-width: 768px)");
+
   const onSuspendCustomer = (customer: Customer) => {
     apiWithToast(updateCustomerStatusAPI(customer.id, "suspended")).then(() => {
       getCustomers();
@@ -76,6 +82,27 @@ export default function CustomersTable({
       setOpenDelete(false);
     });
   };
+  const onClickViewRentalHistory = (customer: Customer) => {
+    setSelectedCustomer(customer);
+    setOpenViewModal(true);
+  };
+  const onClickEditCustomer = (customer: Customer) => {
+    setSelectedCustomer(customer);
+    setOpenEditModal(true);
+  };
+  const onClickSuspendCustomer = (customer: Customer) => {
+    setSelectedCustomer(customer);
+    setOpenSuspend(true);
+  };
+  const onClickActivateCustomer = (customer: Customer) => {
+    setSelectedCustomer(customer);
+    setOpenActivate(true);
+  };
+  const onClickDeleteCustomer = (customer: Customer) => {
+    setRecordToBeDeleted(customer);
+    setOpenDelete(true);
+  };
+
   const setupStatus = (row: Customer) => {
     const status = row.status;
     const statusMap: Record<
@@ -106,25 +133,47 @@ export default function CustomersTable({
       name: "First Name",
       selector: (row) => row.firstName,
       sortable: true,
+      omit: isFirstResize,
     },
     {
       name: "Last Name",
       selector: (row) => row.lastName,
+      omit: isFirstResize,
+    },
+    {
+      name: "Full Name",
+      selector: (row) => nameJoiner(row),
+      grow: 2,
+      omit: !isFirstResize,
     },
     {
       name: "Phone",
       selector: (row) => row.phone,
       grow: 1.5,
+      omit: isFirstResize,
     },
     {
       name: "Email",
       selector: (row) => row.email,
       grow: 2,
+      omit: isFirstResize,
+    },
+    {
+      name: "Contact",
+      cell: (row) => (
+        <div>
+          <div className="">{row.phone}</div>
+          <div className="">{row.email}</div>
+        </div>
+      ),
+      grow: 4,
+      omit: !isFirstResize,
     },
     {
       name: "Current",
       selector: (row) => row.activeRental,
       cell: (row) => <div className="info-color bold">{row.activeRental}</div>,
+      center: true,
     },
     {
       name: "Status",
@@ -136,48 +185,37 @@ export default function CustomersTable({
       cell: (row) => {
         return (
           <div className="flex justify-around text-2xl">
-            <BiLinkExternal
-              className="link-like mr-3"
-              onClick={() => {
-                setSelectedCustomer(row);
-                setOpenViewModal(true);
-              }}
-            />
-            <FiEdit
-              className="link-like text-[19px]"
-              onClick={() => {
-                setSelectedCustomer(row);
-                setOpenEditModal(true);
-              }}
-            />
-
             <TableActionMenu
               items={[
                 {
-                  label: "Delete",
-                  icon: <RiDeleteBin2Line />,
-                  onClick: () => {
-                    setRecordToBeDeleted(row);
-                    setOpenDelete(true);
-                  },
+                  label: "All Rentals",
+                  icon: <BiLinkExternal />,
+                  standAlone: !isFirstResize,
+                  onClick: () => onClickViewRentalHistory(row),
                 },
+                {
+                  label: "Edit",
+                  icon: <FiEdit />,
+                  standAlone: !isFirstResize,
+                  onClick: () => onClickEditCustomer(row),
+                },
+
                 {
                   label: "Suspend",
                   hide: row.status !== "active",
                   icon: <UserRoundX />,
-                  onClick: () => {
-                    setSelectedCustomer(row);
-                    setOpenSuspend(true);
-                  },
+                  onClick: () => onClickSuspendCustomer(row),
                 },
                 {
                   label: "Activate",
                   icon: <UserRoundCheck />,
                   hide: row.status !== "suspended",
-                  onClick: () => {
-                    setSelectedCustomer(row);
-                    setOpenActivate(true);
-                  },
+                  onClick: () => onClickActivateCustomer(row),
+                },
+                {
+                  label: "Delete",
+                  icon: <RiDeleteBin2Line />,
+                  onClick: () => onClickDeleteCustomer(row),
                 },
               ]}
             />
@@ -190,20 +228,36 @@ export default function CustomersTable({
 
   return (
     <div>
-      <DataTable
-        data={customers}
-        columns={columns}
-        pagination
-        paginationTotalRows={paginationTotalRows}
-        paginationPerPage={paginationPerPage}
-        onChangePage={onChangePage}
-        paginationServer
-        onChangeRowsPerPage={onChangeRowsPerPage}
-        paginationRowsPerPageOptions={DEFAULT_PAGINATION_OPTIONS}
-        paginationResetDefaultPage={resetDefaultPage}
-        progressPending={tableLoading}
-        progressComponent={<Loading />}
-      />
+      {!isSecondResize ? (
+        <DataTable
+          data={customers}
+          columns={columns}
+          pagination
+          paginationTotalRows={paginationTotalRows}
+          paginationPerPage={paginationPerPage}
+          onChangePage={onChangePage}
+          paginationServer
+          onChangeRowsPerPage={onChangeRowsPerPage}
+          paginationRowsPerPageOptions={DEFAULT_PAGINATION_OPTIONS}
+          paginationResetDefaultPage={resetDefaultPage}
+          progressPending={tableLoading}
+          progressComponent={<Loading />}
+        />
+      ) : (
+        <>
+          {customers.map((customer) => (
+            <CustomerCard
+              key={customer.id}
+              customer={customer}
+              onRentalHistory={() => onClickViewRentalHistory(customer)}
+              onEdit={() => onClickEditCustomer(customer)}
+              onSuspend={() => onClickSuspendCustomer(customer)}
+              onActivate={() => onClickActivateCustomer(customer)}
+              onDelete={() => onClickDeleteCustomer(customer)}
+            />
+          ))}
+        </>
+      )}
       {openDelete && recordToBeDeleted && (
         <ConfirmationModal
           onClose={() => {

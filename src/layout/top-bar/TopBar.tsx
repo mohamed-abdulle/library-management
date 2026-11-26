@@ -2,7 +2,7 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { RxAvatar } from "react-icons/rx";
 import { ROUTES } from "src/services/appRoutes/routes";
 import { sidebarNavigationData } from "../sidebar/SidebarNavigation";
-import MyDropdownMenu from "src/components/dropdown-menu/DropdownMenu";
+import MyDropdownMenu from "src/components/my-dropdown-menu/MyDropdownMenu";
 import { Menu } from "lucide-react";
 
 const TopBar = () => {

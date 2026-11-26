@@ -10,3 +10,21 @@
       background: var(--color-button-bg)
       color: var(--color-text-alternative)
 
+.desktop-filter
+  display: flex
+
+.mobile-filter
+  display: none
+
+@media (max-width: 600px)
+  .desktop-filter
+    display: none !important
+
+  .mobile-filter
+    display: flex
+    align-items: center
+    gap: 8px
+
+  .mobile-filter__selected
+    font-weight: 500
+    font-size: 14px
